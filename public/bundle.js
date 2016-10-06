@@ -113,18 +113,18 @@
 
 	var _Weather2 = _interopRequireDefault(_Weather);
 
-	var _About = __webpack_require__(257);
+	var _About = __webpack_require__(258);
 
 	var _About2 = _interopRequireDefault(_About);
 
-	var _Examples = __webpack_require__(258);
+	var _Examples = __webpack_require__(259);
 
 	var _Examples2 = _interopRequireDefault(_Examples);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	//Load foundation
-	__webpack_require__(259);
+	__webpack_require__(260);
 	$(document).foundation();
 
 	_reactDom2.default.render(_react2.default.createElement(
@@ -25545,11 +25545,14 @@
 	        null,
 	        _react2.default.createElement(_Nav2.default, null),
 	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Main Component'
-	        ),
-	        this.props.children
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'columns medium-6 large-4 small-centered' },
+	            this.props.children
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -25713,6 +25716,10 @@
 
 	var _OpenWeatherMap2 = _interopRequireDefault(_OpenWeatherMap);
 
+	var _ErrorModal = __webpack_require__(257);
+
+	var _ErrorModal2 = _interopRequireDefault(_ErrorModal);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25741,7 +25748,10 @@
 	        value: function handleSearch(location) {
 	            var that = this;
 
-	            this.setState({ isLoading: true });
+	            this.setState({
+	                isLoading: true,
+	                errorMessage: undefined
+	            });
 
 	            _OpenWeatherMap2.default.getTemp(location).then(function (temp) {
 	                that.setState({
@@ -25749,9 +25759,11 @@
 	                    temp: temp,
 	                    isLoading: false
 	                });
-	            }, function (errorMessage) {
-	                that.setState({ isLoading: false });
-	                alert(errorMessage);
+	            }, function (e) {
+	                that.setState({
+	                    isLoading: false,
+	                    errorMessage: e.message
+	                });
 	            });
 	        }
 	    }, {
@@ -25761,17 +25773,24 @@
 	            var isLoading = _state.isLoading;
 	            var location = _state.location;
 	            var temp = _state.temp;
+	            var errorMessage = _state.errorMessage;
 
 
 	            function renderMessage() {
 	                if (isLoading) {
 	                    return _react2.default.createElement(
 	                        'h3',
-	                        null,
+	                        { className: 'text-center' },
 	                        'Fetching weather...'
 	                    );
 	                } else if (location && temp) {
 	                    return _react2.default.createElement(_WeatherMessage2.default, { location: location, temp: temp });
+	                }
+	            }
+
+	            function renderError() {
+	                if (typeof errorMessage === "string") {
+	                    return _react2.default.createElement(_ErrorModal2.default, { message: errorMessage });
 	                }
 	            }
 
@@ -25780,11 +25799,12 @@
 	                null,
 	                _react2.default.createElement(
 	                    'h1',
-	                    null,
-	                    'Weather Component'
+	                    { className: 'text-center' },
+	                    'Get Weather'
 	                ),
 	                _react2.default.createElement(_WeatherForm2.default, { onSearch: this.handleSearch }),
-	                renderMessage()
+	                renderMessage(),
+	                renderError()
 	            );
 	        }
 	    }]);
@@ -25861,7 +25881,7 @@
 	          _react2.default.createElement('input', { type: 'text', ref: 'location' }),
 	          _react2.default.createElement(
 	            'button',
-	            null,
+	            { className: 'button expended hollow' },
 	            'Get Weather'
 	          )
 	        )
@@ -25919,7 +25939,7 @@
 	        null,
 	        _react2.default.createElement(
 	          'h1',
-	          null,
+	          { className: 'text-center' },
 	          'It\'s ',
 	          this.props.temp,
 	          ' in ',
@@ -27311,6 +27331,98 @@
 /* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(8);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(165);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ErrorModal = function (_React$Component) {
+	  _inherits(ErrorModal, _React$Component);
+
+	  function ErrorModal() {
+	    _classCallCheck(this, ErrorModal);
+
+	    return _possibleConstructorReturn(this, (ErrorModal.__proto__ || Object.getPrototypeOf(ErrorModal)).apply(this, arguments));
+	  }
+
+	  _createClass(ErrorModal, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var modal = new Foundation.Reveal($('#error-modal'));
+	      modal.open();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var title = _props.title;
+	      var message = _props.message;
+
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'error-modal', className: 'reveal tiny text-center', 'data-reveal': '' },
+	        _react2.default.createElement(
+	          'h4',
+	          null,
+	          title
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          message
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'button hollow', 'data-close': '' },
+	            'Okay'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return ErrorModal;
+	}(_react2.default.Component);
+
+	exports.default = ErrorModal;
+
+
+	ErrorModal.propTypes = {
+	  title: _react2.default.PropTypes.string,
+	  message: _react2.default.PropTypes.string.isRequired
+	};
+
+	ErrorModal.defaultProps = {
+	  title: 'Error'
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -27348,9 +27460,47 @@
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        'h1',
+	        'div',
 	        null,
-	        'About Component'
+	        _react2.default.createElement(
+	          'h1',
+	          { className: 'text-center' },
+	          'About'
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'This is a weather application build on React. I have built this for The Complete React Web App Developer Course.'
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Here are some of tools are used:'
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          null,
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'a',
+	              { href: 'https://facebook.github.io/react' },
+	              'React'
+	            ),
+	            ' - This was the javascript framework used.'
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'a',
+	              { href: 'http://openweathermap.org' },
+	              'Open Weather Map'
+	            ),
+	            ' - I ued OpenWeatherMap  to search for weather data by city name.'
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -27361,13 +27511,13 @@
 	exports.default = About;
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -27380,6 +27530,8 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
+	var _reactRouter = __webpack_require__(166);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27389,41 +27541,72 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Examples = function (_React$Component) {
-	  _inherits(Examples, _React$Component);
+		_inherits(Examples, _React$Component);
 
-	  function Examples() {
-	    _classCallCheck(this, Examples);
+		function Examples() {
+			_classCallCheck(this, Examples);
 
-	    return _possibleConstructorReturn(this, (Examples.__proto__ || Object.getPrototypeOf(Examples)).apply(this, arguments));
-	  }
+			return _possibleConstructorReturn(this, (Examples.__proto__ || Object.getPrototypeOf(Examples)).apply(this, arguments));
+		}
 
-	  _createClass(Examples, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'h1',
-	        null,
-	        'Examples '
-	      );
-	    }
-	  }]);
+		_createClass(Examples, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h1',
+						{ className: 'text-center' },
+						'Examples'
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Here a few examples locations to try out: '
+					),
+					_react2.default.createElement(
+						'ol',
+						null,
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								_reactRouter.Link,
+								{ to: '/?location=Medellin' },
+								'Medellin'
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								_reactRouter.Link,
+								{ to: '/?location=cali' },
+								'Cali'
+							)
+						)
+					)
+				);
+			}
+		}]);
 
-	  return Examples;
+		return Examples;
 	}(_react2.default.Component);
 
 	exports.default = Examples;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(260);
+	var content = __webpack_require__(261);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(262)(content, {});
+	var update = __webpack_require__(263)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -27440,10 +27623,10 @@
 	}
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(261)();
+	exports = module.exports = __webpack_require__(262)();
 	// imports
 
 
@@ -27454,7 +27637,7 @@
 
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports) {
 
 	/*
@@ -27510,7 +27693,7 @@
 
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
