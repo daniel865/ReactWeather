@@ -1,6 +1,6 @@
 var axios = require('axios');
 
-const OPEN_WEATHER_MAP_URL = 'http://api.openweathermap.org/data/2.5/weather?units=metric&appid=be62a9d7de6b2c8b60e1ce2b89fd4e9a';
+const OPEN_WEATHER_MAP_URL = 'http://api.openweathermap.org/data/2.5/weather?appid=be62a9d7de6b2c8b60e1ce2b89fd4e9a&units=metric';
 
 // be62a9d7de6b2c8b60e1ce2b89fd4e9a
 

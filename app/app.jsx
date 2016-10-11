@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Router, IndexRoute, hasHistory } from 'react-router';
+import { Route, Router, IndexRoute, hashHistory } from 'react-router';
 
 import Main from './components/Main';
 import Weather from './components/Weather';
@@ -11,13 +11,16 @@ import Examples from './components/Examples';
 require('style!css!foundation-sites/dist/foundation.min.css');
 $(document).foundation();
 
+// App css
+require('style!css!sass!app/styles/app.scss');
+
 ReactDOM.render(
-  <Router history={hasHistory}>
-  	<Route path="/" component={Main}>
-  		<Route path="about" component={About} />
-  		<Route path="examples" component={Examples} />
-  		<IndexRoute component={Weather} />
-  	</Route>
-  </Router>	,
+  <Router history={hashHistory}>
+    <Route path="/" component={Main}>
+      <Route path="about" component={About}/>
+      <Route path="examples" component={Examples}/>
+      <IndexRoute component={Weather}/>
+    </Route>
+  </Router>,
   document.getElementById('app')
 );

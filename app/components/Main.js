@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Nav from './Nav';
-import Weather from './Weather';
 
 export default class Main extends React.Component {
   render(){

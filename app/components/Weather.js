@@ -21,7 +21,9 @@ export default class Weather extends React.Component {
 
     this.setState({
         isLoading: true, 
-        errorMessage: undefined 
+        errorMessage: undefined, 
+        location: undefined, 
+        temp: undefined
     });
 
     OpenWeatherMap.getTemp(location).then(function(temp){
@@ -33,10 +35,27 @@ export default class Weather extends React.Component {
     }, function(e){
         that.setState({
             isLoading: false, 
-            errorMessage: e.message    
+            errorMessage: 'City not found'    
         });
     });
   } 
+
+  componentDidMount(){
+    let location = this.props.location.query.location; 
+
+    if (location && location.length > 0){
+        this.handleSearch(location);
+        window.location.hash = '#/';
+    }   
+  }
+
+  componentWillReceiveProps(nextProps){
+    let location = nextProps.location.query.location;
+    if (location && location.length > 0){
+        this.handleSearch(location);
+        window.location.hash = '#/';
+    }    
+  }
     
   render(){
     let {isLoading, location, temp, errorMessage} = this.state;
@@ -45,25 +64,23 @@ export default class Weather extends React.Component {
         if (isLoading){
         return (
             <h3 className="text-center">Fetching weather...</h3>
-        );
+        )
         }else if (location && temp){
             return (
                 <WeatherMessage location={location} temp={temp} />
-            );
+            )
         }
     }
 
     function renderError(){
-        if (typeof errorMessage === "string"){
-            return (
-                <ErrorModal message={errorMessage} />
-            );
+        if (typeof errorMessage === 'string' ){
+            return <ErrorModal message={errorMessage} />
         }
     }
 
     return (
     	<div>
-    	  <h1 className="text-center">Get Weather</h1>
+    	  <h1 className="text-center page-title">Get Weather</h1>
     	  <WeatherForm onSearch={this.handleSearch} />
     	  {renderMessage()}
           {renderError()}
